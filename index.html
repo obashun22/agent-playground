@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Agent入門</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -11,133 +14,388 @@
             box-sizing: border-box;
         }
         body {
-            font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', sans-serif;
+            font-family: 'Inter', 'Noto Sans JP', sans-serif;
             line-height: 1.8;
-            color: #333;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #1a1a2e;
+            background: #0f0f23;
             min-height: 100vh;
+            overflow-x: hidden;
         }
+
+        /* Hero background */
+        .hero-bg {
+            position: relative;
+            background: linear-gradient(160deg, #0f0f23 0%, #1a1a3e 40%, #2d1b69 70%, #0f0f23 100%);
+            padding-bottom: 80px;
+        }
+        .hero-bg::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                radial-gradient(circle at 20% 20%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 60%, rgba(168, 85, 247, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 50% 80%, rgba(59, 130, 246, 0.08) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
         .container {
-            max-width: 900px;
+            max-width: 960px;
             margin: 0 auto;
-            padding: 40px 20px;
+            padding: 0 24px;
+            position: relative;
+            z-index: 1;
         }
+
+        /* Navigation */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 24px 0;
+        }
+        .logo {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #a78bfa;
+            letter-spacing: -0.02em;
+        }
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            list-style: none;
+        }
+        .nav-links a {
+            color: rgba(255, 255, 255, 0.6);
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        .nav-links a:hover {
+            color: #fff;
+        }
+
+        /* Header */
         header {
             text-align: center;
-            padding: 60px 0;
-            color: white;
+            padding: 80px 0 60px;
+        }
+        .badge {
+            display: inline-block;
+            background: rgba(99, 102, 241, 0.15);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            color: #a78bfa;
+            padding: 6px 16px;
+            border-radius: 100px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            margin-bottom: 24px;
         }
         header h1 {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: #fff;
+            letter-spacing: -0.03em;
+            line-height: 1.2;
+            margin-bottom: 16px;
+        }
+        header h1 span {
+            background: linear-gradient(135deg, #818cf8, #c084fc, #f472b6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
         header p {
-            font-size: 1.2rem;
-            opacity: 0.9;
+            font-size: 1.15rem;
+            color: rgba(255, 255, 255, 0.55);
+            max-width: 520px;
+            margin: 0 auto;
+            font-weight: 400;
         }
+
+        /* Cards section */
+        .content-section {
+            background: #f8f9fc;
+            border-radius: 32px 32px 0 0;
+            padding: 64px 0 80px;
+            margin-top: 20px;
+        }
+        .content-section .container {
+            display: flex;
+            flex-direction: column;
+            gap: 32px;
+        }
+
         .card {
-            background: white;
-            border-radius: 16px;
-            padding: 30px;
-            margin-bottom: 24px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            background: #fff;
+            border-radius: 20px;
+            padding: 36px 40px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 4px 16px rgba(0, 0, 0, 0.03);
+            border: 1px solid rgba(0, 0, 0, 0.04);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06), 0 12px 32px rgba(0, 0, 0, 0.06);
         }
         .card h2 {
-            color: #667eea;
-            margin-bottom: 16px;
-            font-size: 1.5rem;
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: #1a1a2e;
+            margin-bottom: 12px;
+            letter-spacing: -0.01em;
+        }
+        .card h2::before {
+            content: '';
+            display: inline-block;
+            width: 4px;
+            height: 20px;
+            background: linear-gradient(180deg, #818cf8, #c084fc);
+            border-radius: 2px;
+            margin-right: 12px;
+            vertical-align: middle;
         }
         .card p {
-            margin-bottom: 12px;
+            color: #555;
+            margin-bottom: 10px;
+            font-size: 0.95rem;
         }
+
+        /* Features grid */
         .features {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
             margin-top: 20px;
         }
         .feature {
-            background: #f8f9ff;
-            padding: 20px;
+            background: linear-gradient(135deg, #f8f7ff 0%, #f0f0ff 100%);
+            padding: 24px;
+            border-radius: 16px;
+            border: 1px solid rgba(99, 102, 241, 0.08);
+            transition: border-color 0.2s;
+        }
+        .feature:hover {
+            border-color: rgba(99, 102, 241, 0.2);
+        }
+        .feature-icon {
+            width: 40px;
+            height: 40px;
             border-radius: 12px;
-            border-left: 4px solid #667eea;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            margin-bottom: 12px;
         }
+        .feature-icon.autonomy { background: rgba(99, 102, 241, 0.12); }
+        .feature-icon.goal { background: rgba(168, 85, 247, 0.12); }
+        .feature-icon.tools { background: rgba(59, 130, 246, 0.12); }
+        .feature-icon.learn { background: rgba(244, 114, 182, 0.12); }
         .feature h3 {
-            color: #764ba2;
-            margin-bottom: 8px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #1a1a2e;
+            margin-bottom: 6px;
         }
-        ul {
-            margin-left: 20px;
+        .feature p {
+            color: #666;
+            font-size: 0.85rem;
+            margin-bottom: 0;
+            line-height: 1.6;
+        }
+
+        /* List items */
+        .list-items {
+            list-style: none;
+            margin: 16px 0 0;
+            padding: 0;
+        }
+        .list-items li {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 14px 0;
+            border-bottom: 1px solid #f0f0f5;
+            font-size: 0.95rem;
+            color: #444;
+        }
+        .list-items li:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+        .list-items li::before {
+            content: '';
+            flex-shrink: 0;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #818cf8, #c084fc);
             margin-top: 10px;
         }
-        li {
-            margin-bottom: 8px;
+        .list-items strong {
+            color: #1a1a2e;
+            font-weight: 600;
         }
+
+        /* Agent tags */
+        .agent-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 16px;
+        }
+        .agent-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 16px 20px;
+            background: #fafafe;
+            border-radius: 14px;
+            border: 1px solid #eeeef5;
+            transition: border-color 0.2s;
+        }
+        .agent-item:hover {
+            border-color: #d0d0e0;
+        }
+        .agent-tag {
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            padding: 4px 10px;
+            border-radius: 6px;
+            flex-shrink: 0;
+        }
+        .agent-tag.anthropic { background: #ede9fe; color: #6d28d9; }
+        .agent-tag.oss { background: #e0f2fe; color: #0369a1; }
+        .agent-tag.github { background: #f0fdf4; color: #15803d; }
+        .agent-name {
+            font-weight: 600;
+            color: #1a1a2e;
+            font-size: 0.95rem;
+        }
+        .agent-desc {
+            color: #888;
+            font-size: 0.85rem;
+            margin-left: auto;
+        }
+
+        /* Footer */
         footer {
+            background: #0f0f23;
             text-align: center;
-            padding: 40px;
-            color: white;
-            opacity: 0.8;
+            padding: 40px 24px;
+            color: rgba(255, 255, 255, 0.35);
+            font-size: 0.85rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 640px) {
+            header h1 { font-size: 2.2rem; }
+            header { padding: 48px 0 40px; }
+            .features { grid-template-columns: 1fr; }
+            .card { padding: 28px 24px; }
+            .agent-desc { display: none; }
+            .nav-links { display: none; }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>AI Agent</h1>
-            <p>自律的に行動するAIの世界へようこそ</p>
-        </header>
-
-        <div class="card">
-            <h2>AI Agentとは？</h2>
-            <p>AI Agent（AIエージェント）は、人間の介入なしに自律的にタスクを実行できるAIシステムです。目標を与えられると、その達成に必要な手順を自ら計画し、実行することができます。</p>
-            <p>従来のAIが「質問に答える」だけだったのに対し、AI Agentは「行動する」ことができる点が大きな違いです。</p>
+    <div class="hero-bg">
+        <div class="container">
+            <nav>
+                <div class="logo">agent-playground</div>
+                <ul class="nav-links">
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#usecases">Use Cases</a></li>
+                    <li><a href="#agents">Agents</a></li>
+                </ul>
+            </nav>
+            <header>
+                <div class="badge">Introduction to AI</div>
+                <h1>次世代の知性、<br><span>AI Agent</span></h1>
+                <p>自律的に思考し、行動するAIの世界へようこそ。目標を与えるだけで、計画から実行までを自ら遂行します。</p>
+            </header>
         </div>
+    </div>
 
-        <div class="card">
-            <h2>主な特徴</h2>
-            <div class="features">
-                <div class="feature">
-                    <h3>自律性</h3>
-                    <p>人間の継続的な指示なしに、独自に判断して行動できます。</p>
+    <div class="content-section">
+        <div class="container">
+            <div class="card" id="about">
+                <h2>AI Agentとは？</h2>
+                <p>AI Agent（AIエージェント）は、人間の介入なしに自律的にタスクを実行できるAIシステムです。目標を与えられると、その達成に必要な手順を自ら計画し、実行することができます。</p>
+                <p>従来のAIが「質問に答える」だけだったのに対し、AI Agentは「行動する」ことができる点が大きな違いです。</p>
+            </div>
+
+            <div class="card" id="features">
+                <h2>主な特徴</h2>
+                <div class="features">
+                    <div class="feature">
+                        <div class="feature-icon autonomy">🧠</div>
+                        <h3>自律性</h3>
+                        <p>人間の継続的な指示なしに、独自に判断して行動できます。</p>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon goal">🎯</div>
+                        <h3>目標指向</h3>
+                        <p>与えられた目標に向かって、最適な方法を自ら選択します。</p>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon tools">🔧</div>
+                        <h3>ツール活用</h3>
+                        <p>Web検索、コード実行、ファイル操作など、様々なツールを使いこなします。</p>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon learn">📈</div>
+                        <h3>学習・適応</h3>
+                        <p>結果をフィードバックとして、行動を改善していきます。</p>
+                    </div>
                 </div>
-                <div class="feature">
-                    <h3>目標指向</h3>
-                    <p>与えられた目標に向かって、最適な方法を自ら選択します。</p>
-                </div>
-                <div class="feature">
-                    <h3>ツール活用</h3>
-                    <p>Web検索、コード実行、ファイル操作など、様々なツールを使いこなします。</p>
-                </div>
-                <div class="feature">
-                    <h3>学習・適応</h3>
-                    <p>結果をフィードバックとして、行動を改善していきます。</p>
+            </div>
+
+            <div class="card" id="usecases">
+                <h2>活用例</h2>
+                <ul class="list-items">
+                    <li><strong>コーディング支援</strong> — コードの作成、デバッグ、リファクタリングを自動化</li>
+                    <li><strong>リサーチ</strong> — 情報収集から分析、レポート作成まで一貫して実行</li>
+                    <li><strong>カスタマーサポート</strong> — 問い合わせ対応から問題解決まで自律的に処理</li>
+                    <li><strong>データ分析</strong> — データの取得、加工、可視化を自動実行</li>
+                </ul>
+            </div>
+
+            <div class="card" id="agents">
+                <h2>代表的なAI Agent</h2>
+                <div class="agent-list">
+                    <div class="agent-item">
+                        <span class="agent-tag anthropic">Anthropic</span>
+                        <span class="agent-name">Claude Code</span>
+                        <span class="agent-desc">コーディング特化エージェント</span>
+                    </div>
+                    <div class="agent-item">
+                        <span class="agent-tag oss">OSS</span>
+                        <span class="agent-name">AutoGPT</span>
+                        <span class="agent-desc">オープンソースの自律型AIエージェント</span>
+                    </div>
+                    <div class="agent-item">
+                        <span class="agent-tag github">GitHub</span>
+                        <span class="agent-name">GitHub Copilot</span>
+                        <span class="agent-desc">コード補完と生成に特化したAIアシスタント</span>
+                    </div>
                 </div>
             </div>
         </div>
-
-        <div class="card">
-            <h2>活用例</h2>
-            <ul>
-                <li><strong>コーディング支援</strong> - コードの作成、デバッグ、リファクタリングを自動化</li>
-                <li><strong>リサーチ</strong> - 情報収集から分析、レポート作成まで一貫して実行</li>
-                <li><strong>カスタマーサポート</strong> - 問い合わせ対応から問題解決まで自律的に処理</li>
-                <li><strong>データ分析</strong> - データの取得、加工、可視化を自動実行</li>
-            </ul>
-        </div>
-
-        <div class="card">
-            <h2>代表的なAI Agent</h2>
-            <ul>
-                <li><strong>Claude Code</strong> - Anthropic社が開発したコーディング特化エージェント</li>
-                <li><strong>AutoGPT</strong> - オープンソースの自律型AIエージェント</li>
-                <li><strong>GitHub Copilot</strong> - コード補完と生成に特化したAIアシスタント</li>
-            </ul>
-        </div>
-
-        <footer>
-            <p>&copy; 2026 AI Agent入門 | agent-playground</p>
-        </footer>
     </div>
+
+    <footer>
+        <p>&copy; 2026 AI Agent入門 — agent-playground</p>
+    </footer>
 </body>
 </html>
