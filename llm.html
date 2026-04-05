@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>主要LLMモデル紹介 — AI Agent入門</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Inter', 'Noto Sans JP', sans-serif;
+            line-height: 1.8;
+            color: #1a1a2e;
+            background: #0f0f23;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Hero background */
+        .hero-bg {
+            position: relative;
+            background: linear-gradient(160deg, #0f0f23 0%, #1a1a3e 40%, #2d1b69 70%, #0f0f23 100%);
+            padding-bottom: 80px;
+        }
+        .hero-bg::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                radial-gradient(circle at 20% 20%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 60%, rgba(168, 85, 247, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 50% 80%, rgba(59, 130, 246, 0.08) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 0 24px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Navigation */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 24px 0;
+        }
+        .logo {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #a78bfa;
+            letter-spacing: -0.02em;
+        }
+        .logo a {
+            color: inherit;
+            text-decoration: none;
+        }
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            list-style: none;
+        }
+        .nav-links a {
+            color: rgba(255, 255, 255, 0.6);
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        .nav-links a:hover {
+            color: #fff;
+        }
+        .nav-links a.active {
+            color: #fff;
+        }
+
+        /* Header */
+        header {
+            text-align: center;
+            padding: 80px 0 60px;
+        }
+        .badge {
+            display: inline-block;
+            background: rgba(99, 102, 241, 0.15);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            color: #a78bfa;
+            padding: 6px 16px;
+            border-radius: 100px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            margin-bottom: 24px;
+        }
+        header h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: #fff;
+            letter-spacing: -0.03em;
+            line-height: 1.2;
+            margin-bottom: 16px;
+        }
+        header h1 span {
+            background: linear-gradient(135deg, #818cf8, #c084fc, #f472b6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        header p {
+            font-size: 1.15rem;
+            color: rgba(255, 255, 255, 0.55);
+            max-width: 560px;
+            margin: 0 auto;
+            font-weight: 400;
+        }
+
+        /* Cards section */
+        .content-section {
+            background: #f8f9fc;
+            border-radius: 32px 32px 0 0;
+            padding: 64px 0 80px;
+            margin-top: 20px;
+        }
+        .content-section .container {
+            display: flex;
+            flex-direction: column;
+            gap: 32px;
+        }
+
+        .card {
+            background: #fff;
+            border-radius: 20px;
+            padding: 36px 40px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 4px 16px rgba(0, 0, 0, 0.03);
+            border: 1px solid rgba(0, 0, 0, 0.04);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06), 0 12px 32px rgba(0, 0, 0, 0.06);
+        }
+        .card h2 {
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: #1a1a2e;
+            margin-bottom: 8px;
+            letter-spacing: -0.01em;
+        }
+        .card h2::before {
+            content: '';
+            display: inline-block;
+            width: 4px;
+            height: 20px;
+            background: linear-gradient(180deg, #818cf8, #c084fc);
+            border-radius: 2px;
+            margin-right: 12px;
+            vertical-align: middle;
+        }
+
+        .card-provider {
+            display: inline-block;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            padding: 4px 10px;
+            border-radius: 6px;
+            margin-bottom: 16px;
+        }
+        .card-provider.openai { background: #e0f2fe; color: #0369a1; }
+        .card-provider.anthropic { background: #ede9fe; color: #6d28d9; }
+        .card-provider.google { background: #fef3c7; color: #b45309; }
+        .card-provider.meta { background: #e0f2fe; color: #0c4a6e; }
+        .card-provider.mistral { background: #fce7f3; color: #9d174d; }
+
+        .card p {
+            color: #555;
+            margin-bottom: 10px;
+            font-size: 0.95rem;
+        }
+
+        .spec-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-top: 16px;
+        }
+        .spec-item {
+            background: linear-gradient(135deg, #f8f7ff 0%, #f0f0ff 100%);
+            padding: 16px;
+            border-radius: 12px;
+            border: 1px solid rgba(99, 102, 241, 0.08);
+            text-align: center;
+        }
+        .spec-label {
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: #888;
+            margin-bottom: 4px;
+        }
+        .spec-value {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: #1a1a2e;
+        }
+
+        .strengths {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 12px;
+        }
+        .strength-tag {
+            font-size: 0.8rem;
+            font-weight: 500;
+            padding: 4px 12px;
+            border-radius: 100px;
+            background: rgba(99, 102, 241, 0.08);
+            color: #5b5fc7;
+        }
+
+        /* Footer */
+        footer {
+            background: #0f0f23;
+            text-align: center;
+            padding: 40px 24px;
+            color: rgba(255, 255, 255, 0.35);
+            font-size: 0.85rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 640px) {
+            header h1 { font-size: 2.2rem; }
+            header { padding: 48px 0 40px; }
+            .card { padding: 28px 24px; }
+            .spec-grid { grid-template-columns: 1fr; }
+            .nav-links { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="hero-bg">
+        <div class="container">
+            <nav>
+                <div class="logo"><a href="index.html">agent-playground</a></div>
+                <ul class="nav-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="llm.html" class="active">LLM</a></li>
+                </ul>
+            </nav>
+            <header>
+                <div class="badge">Large Language Models</div>
+                <h1>主要な<span>LLM</span>モデル</h1>
+                <p>AI Agentの頭脳となる大規模言語モデル。各社が競い合う最先端モデルの特徴と強みを紹介します。</p>
+            </header>
+        </div>
+    </div>
+
+    <div class="content-section">
+        <div class="container">
+
+            <!-- GPT-4o -->
+            <div class="card">
+                <h2>GPT-4o</h2>
+                <span class="card-provider openai">OpenAI</span>
+                <p>GPT-4oは、OpenAIが開発したマルチモーダル対応のフラッグシップモデルです。テキスト・画像・音声を統合的に処理でき、高速な応答速度と高い推論能力を両立しています。</p>
+                <div class="spec-grid">
+                    <div class="spec-item">
+                        <div class="spec-label">コンテキスト長</div>
+                        <div class="spec-value">128K tokens</div>
+                    </div>
+                    <div class="spec-item">
+                        <div class="spec-label">入力</div>
+                        <div class="spec-value">テキスト・画像・音声</div>
+                    </div>
+                    <div class="spec-item">
+                        <div class="spec-label">ライセンス</div>
+                        <div class="spec-value">プロプライエタリ</div>
+                    </div>
+                </div>
+                <div class="strengths">
+                    <span class="strength-tag">マルチモーダル</span>
+                    <span class="strength-tag">高速応答</span>
+                    <span class="strength-tag">多言語対応</span>
+                    <span class="strength-tag">ツール使用</span>
+                </div>
+            </div>
+
+            <!-- Claude 3.7 Sonnet -->
+            <div class="card">
+                <h2>Claude 3.7 Sonnet</h2>
+                <span class="card-provider anthropic">Anthropic</span>
+                <p>Claude 3.7 Sonnetは、Anthropicが開発した高性能モデルです。拡張思考（Extended Thinking）機能を搭載し、複雑な推論タスクにおいて段階的に思考を深めることができます。コーディング能力に特に優れています。</p>
+                <div class="spec-grid">
+                    <div class="spec-item">
+                        <div class="spec-label">コンテキスト長</div>
+                        <div class="spec-value">200K tokens</div>
+                    </div>
+                    <div class="spec-item">
+                        <div class="spec-label">入力</div>
+                        <div class="spec-value">テキスト・画像</div>
+                    </div>
+                    <div class="spec-item">
+                        <div class="spec-label">ライセンス</div>
+                        <div class="spec-value">プロプライエタリ</div>
+                    </div>
+                </div>
+                <div class="strengths">
+                    <span class="strength-tag">拡張思考</span>
+                    <span class="strength-tag">コーディング</span>
+                    <span class="strength-tag">長文理解</span>
+                    <span class="strength-tag">安全性</span>
+                </div>
+            </div>
+
+            <!-- Gemini 2.0 Flash -->
+            <div class="card">
+                <h2>Gemini 2.0 Flash</h2>
+                <span class="card-provider google">Google</span>
+                <p>Gemini 2.0 Flashは、Googleが開発した高速・高効率なマルチモーダルモデルです。低レイテンシを実現しつつ、テキスト・画像・動画・音声の統合処理が可能。エージェント機能にネイティブ対応しています。</p>
+                <div class="spec-grid">
+                    <div class="spec-item">
+                        <div class="spec-label">コンテキスト長</div>
+                        <div class="spec-value">1M tokens</div>
+                    </div>
+                    <div class="spec-item">
+                        <div class="spec-label">入力</div>
+                        <div class="spec-value">テキスト・画像・動画・音声</div>
+                    </div>
+                    <div class="spec-item">
+                        <div class="spec-label">ライセンス</div>
+                        <div class="spec-value">プロプライエタリ</div>
+                    </div>
+                </div>
+                <div class="strengths">
+                    <span class="strength-tag">超高速</span>
+                    <span class="strength-tag">100万トークン</span>
+                    <span class="strength-tag">マルチモーダル</span>
+                    <span class="strength-tag">エージェント対応</span>
+                </div>
+            </div>
+
+            <!-- Llama 3.3 -->
+            <div class="card">
+                <h2>Llama 3.3</h2>
+                <span class="card-provider meta">Meta (OSS)</span>
+                <p>Llama 3.3は、Metaがオープンソースで公開した70Bパラメータの大規模言語モデルです。商用利用可能なライセンスで提供され、推論・コーディング・多言語タスクにおいてクローズドモデルに匹敵する性能を発揮します。</p>
+                <div class="spec-grid">
+                    <div class="spec-item">
+                        <div class="spec-label">コンテキスト長</div>
+                        <div class="spec-value">128K tokens</div>
+                    </div>
+                    <div class="spec-item">
+                        <div class="spec-label">パラメータ</div>
+                        <div class="spec-value">70B</div>
+                    </div>
+                    <div class="spec-item">
+                        <div class="spec-label">ライセンス</div>
+                        <div class="spec-value">Llama 3.3 License</div>
+                    </div>
+                </div>
+                <div class="strengths">
+                    <span class="strength-tag">オープンソース</span>
+                    <span class="strength-tag">商用利用可</span>
+                    <span class="strength-tag">ローカル実行</span>
+                    <span class="strength-tag">ファインチューニング可</span>
+                </div>
+            </div>
+
+            <!-- Mistral Large -->
+            <div class="card">
+                <h2>Mistral Large</h2>
+                <span class="card-provider mistral">Mistral AI</span>
+                <p>Mistral Largeは、フランスのMistral AIが開発したフラッグシップモデルです。多言語対応に優れ、コード生成やJSON出力などの構造化タスクに強みがあります。ヨーロッパ発のAI企業として注目を集めています。</p>
+                <div class="spec-grid">
+                    <div class="spec-item">
+                        <div class="spec-label">コンテキスト長</div>
+                        <div class="spec-value">128K tokens</div>
+                    </div>
+                    <div class="spec-item">
+                        <div class="spec-label">入力</div>
+                        <div class="spec-value">テキスト・画像</div>
+                    </div>
+                    <div class="spec-item">
+                        <div class="spec-label">ライセンス</div>
+                        <div class="spec-value">プロプライエタリ</div>
+                    </div>
+                </div>
+                <div class="strengths">
+                    <span class="strength-tag">多言語</span>
+                    <span class="strength-tag">コード生成</span>
+                    <span class="strength-tag">構造化出力</span>
+                    <span class="strength-tag">Function Calling</span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 AI Agent入門 — agent-playground</p>
+    </footer>
+</body>
+</html>
