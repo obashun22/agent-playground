@@ -165,6 +165,193 @@ header p {
     font-size: 0.95rem;
 }
 
+/* ReAct Loop Architecture Diagram */
+.react-loop {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 0;
+    margin-top: 28px;
+    padding: 0 12px;
+}
+
+.react-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 24px 20px;
+    border-radius: 16px;
+    border: 2px solid transparent;
+    width: 180px;
+    position: relative;
+    animation: react-highlight 4.5s ease-in-out infinite;
+}
+
+.react-step--reason {
+    background: rgba(99, 102, 241, 0.06);
+    border-color: rgba(99, 102, 241, 0.15);
+    animation-delay: 0s;
+}
+.react-step--act {
+    background: rgba(168, 85, 247, 0.06);
+    border-color: rgba(168, 85, 247, 0.15);
+    animation-delay: 1.5s;
+}
+.react-step--observe {
+    background: rgba(59, 130, 246, 0.06);
+    border-color: rgba(59, 130, 246, 0.15);
+    animation-delay: 3s;
+}
+
+.react-step__icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+}
+.react-step--reason .react-step__icon { background: rgba(99, 102, 241, 0.12); }
+.react-step--act .react-step__icon { background: rgba(168, 85, 247, 0.12); }
+.react-step--observe .react-step__icon { background: rgba(59, 130, 246, 0.12); }
+
+.react-step__label {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #1a1a2e;
+    margin-bottom: 6px;
+}
+
+.react-step__desc {
+    font-size: 0.8rem;
+    color: #666;
+    line-height: 1.5;
+}
+
+/* Arrows between steps */
+.react-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    align-self: center;
+}
+
+.react-arrow--horizontal {
+    width: 48px;
+    height: 2px;
+    background: linear-gradient(90deg, #818cf8, #c084fc);
+    position: relative;
+    margin-top: -20px;
+}
+.react-arrow--horizontal::after {
+    content: '';
+    position: absolute;
+    right: -1px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0;
+    height: 0;
+    border-left: 8px solid #c084fc;
+    border-top: 5px solid transparent;
+    border-bottom: 5px solid transparent;
+}
+
+/* Feedback loop */
+.react-feedback {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 8px;
+    padding: 0 40px;
+}
+
+.react-feedback__arrow {
+    width: 80%;
+    max-width: 500px;
+    height: 40px;
+    border: 2px solid transparent;
+    border-bottom: 2px dashed rgba(168, 85, 247, 0.3);
+    border-left: 2px dashed rgba(168, 85, 247, 0.3);
+    border-right: 2px dashed rgba(168, 85, 247, 0.3);
+    border-radius: 0 0 20px 20px;
+    position: relative;
+    animation: react-pulse 4.5s ease-in-out infinite;
+}
+.react-feedback__arrow::before {
+    content: '';
+    position: absolute;
+    left: -2px;
+    top: -6px;
+    width: 0;
+    height: 0;
+    border-bottom: 7px solid rgba(168, 85, 247, 0.4);
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+}
+
+.react-feedback__label {
+    font-size: 0.8rem;
+    color: #999;
+    margin-top: 10px;
+    font-weight: 500;
+}
+
+/* Step highlight animation */
+@keyframes react-highlight {
+    0%, 100% {
+        transform: scale(1);
+        box-shadow: none;
+    }
+    15%, 30% {
+        transform: scale(1.04);
+        box-shadow: 0 4px 20px rgba(99, 102, 241, 0.15);
+    }
+}
+
+/* Feedback arrow pulse */
+@keyframes react-pulse {
+    0%, 100% { border-color: transparent transparent rgba(168, 85, 247, 0.15) rgba(168, 85, 247, 0.15); }
+    50% { border-color: transparent transparent rgba(168, 85, 247, 0.4) rgba(168, 85, 247, 0.4); }
+}
+
+/* ReAct Loop responsive */
+@media (max-width: 640px) {
+    .react-loop {
+        flex-direction: column;
+        align-items: center;
+        gap: 0;
+    }
+    .react-step {
+        width: 100%;
+        max-width: 280px;
+    }
+    .react-arrow--horizontal {
+        width: 2px;
+        height: 32px;
+        background: linear-gradient(180deg, #818cf8, #c084fc);
+        margin-top: 0;
+    }
+    .react-arrow--horizontal::after {
+        right: auto;
+        top: auto;
+        bottom: -1px;
+        left: 50%;
+        transform: translateX(-50%);
+        border-left: 5px solid transparent;
+        border-right: 5px solid transparent;
+        border-top: 8px solid #c084fc;
+        border-bottom: none;
+    }
+    .react-feedback__arrow {
+        width: 60%;
+        height: 30px;
+    }
+}
+
 /* Footer */
 footer {
     background: #0f0f23;

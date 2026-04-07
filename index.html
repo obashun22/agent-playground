@@ -143,6 +143,7 @@
                 <div class="logo"><a href="index.html">agent-playground</a></div>
                 <ul class="nav-links">
                     <li><a href="#about">About</a></li>
+                    <li><a href="#architecture">Architecture</a></li>
                     <li><a href="#features">Features</a></li>
                     <li><a href="#usecases">Use Cases</a></li>
                     <li><a href="#agents">Agents</a></li>
@@ -165,6 +166,34 @@
                 <h2>AI Agentとは？</h2>
                 <p>AI Agent（AIエージェント）は、人間の介入なしに自律的にタスクを実行できるAIシステムです。目標を与えられると、その達成に必要な手順を自ら計画し、実行することができます。</p>
                 <p>従来のAIが「質問に答える」だけだったのに対し、AI Agentは「行動する」ことができる点が大きな違いです。</p>
+            </div>
+
+            <div class="card" id="architecture">
+                <h2>AI Agentの仕組み</h2>
+                <p>AI Agentは<strong>ReActパターン</strong>（Reasoning → Acting → Observing）のループで動作します。目標に向かって思考・行動・観察を繰り返し、自律的にタスクを遂行します。</p>
+                <div class="react-loop">
+                    <div class="react-step react-step--reason">
+                        <div class="react-step__icon">🧠</div>
+                        <div class="react-step__label">Reasoning</div>
+                        <div class="react-step__desc">状況を分析し、次に取るべき行動を計画する</div>
+                    </div>
+                    <div class="react-arrow react-arrow--horizontal"></div>
+                    <div class="react-step react-step--act">
+                        <div class="react-step__icon">⚡</div>
+                        <div class="react-step__label">Acting</div>
+                        <div class="react-step__desc">ツールを使い、計画した行動を実行する</div>
+                    </div>
+                    <div class="react-arrow react-arrow--horizontal"></div>
+                    <div class="react-step react-step--observe">
+                        <div class="react-step__icon">👁️</div>
+                        <div class="react-step__label">Observing</div>
+                        <div class="react-step__desc">実行結果を確認し、次のステップに反映する</div>
+                    </div>
+                </div>
+                <div class="react-feedback">
+                    <div class="react-feedback__arrow"></div>
+                    <div class="react-feedback__label">フィードバックループ — 目標達成まで繰り返す</div>
+                </div>
             </div>
 
             <div class="card" id="features">

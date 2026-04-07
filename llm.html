@@ -74,9 +74,79 @@
             color: #5b5fc7;
         }
 
+        /* Filter */
+        .filter-radio {
+            display: none;
+        }
+        .filter-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+            margin-bottom: 8px;
+        }
+        .filter-label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            padding: 8px 20px;
+            border-radius: 100px;
+            background: #fff;
+            color: #555;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            cursor: pointer;
+            transition: all 0.25s ease;
+            user-select: none;
+        }
+        .filter-label:hover {
+            background: rgba(99, 102, 241, 0.08);
+            color: #5b5fc7;
+            border-color: rgba(99, 102, 241, 0.2);
+        }
+        /* アクティブなフィルタラベル */
+        #filter-all:checked ~ .filter-bar label[for="filter-all"],
+        #filter-openai:checked ~ .filter-bar label[for="filter-openai"],
+        #filter-anthropic:checked ~ .filter-bar label[for="filter-anthropic"],
+        #filter-google:checked ~ .filter-bar label[for="filter-google"],
+        #filter-meta:checked ~ .filter-bar label[for="filter-meta"],
+        #filter-mistral:checked ~ .filter-bar label[for="filter-mistral"],
+        #filter-oss:checked ~ .filter-bar label[for="filter-oss"] {
+            background: linear-gradient(135deg, #818cf8, #a78bfa);
+            color: #fff;
+            border-color: transparent;
+            box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3);
+        }
+
+        /* フィルタリングロジック: 非表示アニメーション */
+        .content-section .card {
+            transition: opacity 0.3s ease, transform 0.3s ease, max-height 0.4s ease, margin 0.4s ease, padding 0.4s ease;
+            overflow: hidden;
+            max-height: 600px;
+        }
+
+        /* 各フィルタ選択時に該当しないカードを非表示 */
+        #filter-openai:checked ~ .card:not(.card-openai),
+        #filter-anthropic:checked ~ .card:not(.card-anthropic),
+        #filter-google:checked ~ .card:not(.card-google),
+        #filter-meta:checked ~ .card:not(.card-meta),
+        #filter-mistral:checked ~ .card:not(.card-mistral),
+        #filter-oss:checked ~ .card:not(.card-oss) {
+            opacity: 0;
+            max-height: 0;
+            margin: 0;
+            padding-top: 0;
+            padding-bottom: 0;
+            border-color: transparent;
+            transform: scale(0.95);
+            pointer-events: none;
+        }
+
         /* Responsive */
         @media (max-width: 640px) {
             .spec-grid { grid-template-columns: 1fr; }
+            .filter-label {
+                font-size: 0.78rem;
+                padding: 6px 14px;
+            }
         }
     </style>
 </head>
@@ -104,8 +174,28 @@
     <div class="content-section">
         <div class="container">
 
+            <!-- フィルタ用ラジオボタン（非表示） -->
+            <input type="radio" name="filter" id="filter-all" class="filter-radio" checked>
+            <input type="radio" name="filter" id="filter-openai" class="filter-radio">
+            <input type="radio" name="filter" id="filter-anthropic" class="filter-radio">
+            <input type="radio" name="filter" id="filter-google" class="filter-radio">
+            <input type="radio" name="filter" id="filter-meta" class="filter-radio">
+            <input type="radio" name="filter" id="filter-mistral" class="filter-radio">
+            <input type="radio" name="filter" id="filter-oss" class="filter-radio">
+
+            <!-- フィルタバー -->
+            <div class="filter-bar">
+                <label for="filter-all" class="filter-label">全表示</label>
+                <label for="filter-openai" class="filter-label">OpenAI</label>
+                <label for="filter-anthropic" class="filter-label">Anthropic</label>
+                <label for="filter-google" class="filter-label">Google</label>
+                <label for="filter-meta" class="filter-label">Meta</label>
+                <label for="filter-mistral" class="filter-label">Mistral</label>
+                <label for="filter-oss" class="filter-label">OSS</label>
+            </div>
+
             <!-- GPT-4.1 -->
-            <div class="card">
+            <div class="card card-openai">
                 <h2>GPT-4.1</h2>
                 <span class="card-provider openai">OpenAI</span>
                 <p>GPT-4.1は、OpenAIが2025年4月にリリースしたGPT-4oの後継モデルです。コーディング能力と指示追従性が大幅に向上し、1Mトークンのロングコンテキストにも対応。マルチモーダル入力をサポートし、複雑なタスクを高精度にこなします。</p>
@@ -132,7 +222,7 @@
             </div>
 
             <!-- Claude Opus 4.6 -->
-            <div class="card">
+            <div class="card card-anthropic">
                 <h2>Claude Opus 4.6</h2>
                 <span class="card-provider anthropic">Anthropic</span>
                 <p>Claude Opus 4.6は、Anthropicが開発したClaude 4.xシリーズの最上位モデルです。1Mトークンのコンテキストに対応し、拡張思考（Extended Thinking）による高度な推論能力を備えています。コーディング・分析・長文理解において最高水準の性能を発揮します。ファミリーにはSonnet 4.6、Haiku 4.5もあります。</p>
@@ -159,7 +249,7 @@
             </div>
 
             <!-- Gemini 2.5 Pro -->
-            <div class="card">
+            <div class="card card-google">
                 <h2>Gemini 2.5 Pro</h2>
                 <span class="card-provider google">Google</span>
                 <p>Gemini 2.5 Proは、Googleが開発した最新のフラッグシップモデルです。「思考モデル」として設計され、内部推論プロセスにより複雑な問題解決能力が向上。1Mトークンのコンテキストでテキスト・画像・動画・音声のマルチモーダル処理に対応しています。</p>
@@ -186,7 +276,7 @@
             </div>
 
             <!-- Llama 4 Maverick -->
-            <div class="card">
+            <div class="card card-meta card-oss">
                 <h2>Llama 4 Maverick</h2>
                 <span class="card-provider meta">Meta (OSS)</span>
                 <p>Llama 4 Maverickは、Metaが2025年4月に公開したLlama 4シリーズのフラッグシップモデルです。Mixture of Experts（MoE）アーキテクチャを採用し、総パラメータ400Bのうち17Bをアクティブに使用する効率的な設計。マルチモーダル対応でテキスト・画像を処理できます。</p>
@@ -213,7 +303,7 @@
             </div>
 
             <!-- Mistral Large -->
-            <div class="card">
+            <div class="card card-mistral">
                 <h2>Mistral Large</h2>
                 <span class="card-provider mistral">Mistral AI</span>
                 <p>Mistral Largeは、フランスのMistral AIが開発したフラッグシップモデルです。128Kトークンのコンテキストで多言語対応に優れ、コード生成やJSON出力などの構造化タスクに強みがあります。エージェント機能やFunction Callingにも対応しています。</p>
